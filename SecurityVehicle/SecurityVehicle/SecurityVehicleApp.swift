@@ -11,7 +11,7 @@ import SwiftUI
 struct SecurityVehicleApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            UpdatePassword()
         }
     }
 }
