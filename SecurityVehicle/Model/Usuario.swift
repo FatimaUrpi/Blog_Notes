@@ -7,8 +7,6 @@
 //
 
 import Foundation
-
-import Foundation
 import CoreData
 
 class Usuario: NSManagedObject, Identifiable {
