@@ -7,5 +7,6 @@ class Usuario: NSManagedObject, Identifiable {
     @NSManaged var password: String?
     @NSManaged var correo: String?
     @NSManaged var nombre: String?
+    
 }
 

@@ -48,7 +48,7 @@ struct LoginView: View {
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.gray.opacity(0.5)))
 
-                NavigationLink(destination: HomeView(), isActive: $isLoggedIn) {
+                NavigationLink(destination: NoteListView(), isActive: $isLoggedIn) {
                     EmptyView()
                 }
 
