@@ -15,6 +15,7 @@
 		B7CC326F2CFB6CF7003A0D31 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CC326E2CFB6CF7003A0D31 /* Note.swift */; };
 		B7CC327B2CFB714F003A0D31 /* NoteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CC327A2CFB714F003A0D31 /* NoteDetailView.swift */; };
 		B7CC327D2CFB7165003A0D31 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CC327C2CFB7165003A0D31 /* NoteListView.swift */; };
+		B7E629142CFB9EFF00886BE9 /* UpdatePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E629132CFB9EFF00886BE9 /* UpdatePassword.swift */; };
 		B7EA1C852CFB500100F1D4B3 /* SecurityVehicleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EA1C842CFB500100F1D4B3 /* SecurityVehicleApp.swift */; };
 		B7EA1C872CFB500100F1D4B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EA1C862CFB500100F1D4B3 /* ContentView.swift */; };
 		B7EA1C892CFB500200F1D4B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B7EA1C882CFB500200F1D4B3 /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 		B7CC326E2CFB6CF7003A0D31 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		B7CC327A2CFB714F003A0D31 /* NoteDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailView.swift; sourceTree = "<group>"; };
 		B7CC327C2CFB7165003A0D31 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
+		B7E629132CFB9EFF00886BE9 /* UpdatePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePassword.swift; sourceTree = "<group>"; };
 		B7EA1C812CFB500100F1D4B3 /* SecurityVehicle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SecurityVehicle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7EA1C842CFB500100F1D4B3 /* SecurityVehicleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityVehicleApp.swift; sourceTree = "<group>"; };
 		B7EA1C862CFB500100F1D4B3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 				B7CC326C2CFB64E2003A0D31 /* HomeView.swift */,
 				B7CC327A2CFB714F003A0D31 /* NoteDetailView.swift */,
 				B7CC327C2CFB7165003A0D31 /* NoteListView.swift */,
+				B7E629132CFB9EFF00886BE9 /* UpdatePassword.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				B7CC326F2CFB6CF7003A0D31 /* Note.swift in Sources */,
 				B7CC326B2CFB6139003A0D31 /* UsuarioManager.swift in Sources */,
 				B7318E122CFB58310065AC82 /* LoginView.swift in Sources */,
+				B7E629142CFB9EFF00886BE9 /* UpdatePassword.swift in Sources */,
 				B7EA1C872CFB500100F1D4B3 /* ContentView.swift in Sources */,
 				B7EA1C852CFB500100F1D4B3 /* SecurityVehicleApp.swift in Sources */,
 			);

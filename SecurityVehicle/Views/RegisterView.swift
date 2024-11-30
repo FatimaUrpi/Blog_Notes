@@ -50,7 +50,7 @@ struct RegisterView: View {
                     alertMessage = "Por favor, llena todos los campos."
                     showAlert = true
                 } else {
-                    UsuarioManager.shared.registrarUsuario(username: username, password: password, correo: email, nombre: nombre)
+                    UsuarioManager.shared.registrarUsuario (username: username, password: password, correo: email, nombre: nombre)
                     alertMessage = "Registro exitoso. ¡Inicia sesión ahora!"
                     showAlert = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
