@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email: String = ""
+    @State private var username: String = ""
     @State private var password: String = ""
     @State private var isSecure: Bool = true
 
@@ -20,7 +20,7 @@ struct LoginView: View {
                 .foregroundColor(.primary)
                 .padding(.bottom, 20)
 
-            TextField("Correo electrónico", text: $email)
+            TextField("Correo electrónico", text: $username)
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.gray.opacity(0.5)))
                 .padding(.bottom, 20)
