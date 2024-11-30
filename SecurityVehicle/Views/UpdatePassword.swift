@@ -20,6 +20,7 @@ struct UpdatePassword: View {
        @State private var contrasenasCoinciden: Bool = true
        @State private var correoValido: Bool = true
        @State private var correoExistente: Bool = true // Validar si el correo existe
+       @Environment(\.presentationMode) var presentationMode // Para regresar al login
        
        var body: some View {
            VStack(spacing: 20) {
@@ -125,7 +126,10 @@ struct UpdatePassword: View {
                        UsuarioManager.shared.actualizarContrasena(correo: correo, nuevaContrasena: nuevaContrasena)
                        mensaje = "Contraseña actualizada con éxito"
                        mostrarMensaje = true
-                       // Redirigir al login (se puede utilizar un NavigationLink o similar)
+                       // Aquí podemos cerrar la vista de actualización y regresar al login
+                       DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                           presentationMode.wrappedValue.dismiss() // Redirige al LoginView
+                       }
                    } else {
                        mensaje = "Por favor, completa todos los requisitos."
                        mostrarMensaje = true
@@ -139,10 +143,9 @@ struct UpdatePassword: View {
                        .cornerRadius(10)
                }
                
-               if mostrarMensaje {
-                   Text(mensaje)
-                       .foregroundColor(.red)
-                       .padding()
+               // Alertas
+               .alert(isPresented: $mostrarMensaje) {
+                   Alert(title: Text("Resultado"), message: Text(mensaje), dismissButton: .default(Text("OK")))
                }
                
                Spacer()
