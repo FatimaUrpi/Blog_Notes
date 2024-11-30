@@ -7,7 +7,7 @@ struct LoginView: View {
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var isLoggedIn: Bool = false
-/*Prueba*/
+/*Prueba _ 1*/
     var body: some View {
         NavigationView {
             VStack {
