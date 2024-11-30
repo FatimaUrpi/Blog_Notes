@@ -20,7 +20,7 @@ struct LoginView: View {
                 .foregroundColor(.primary)
                 .padding(.bottom, 20)
 
-            TextField("Correo electrónico", text: $username)
+            TextField("Usuario", text: $username)
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.gray.opacity(0.5)))
                 .padding(.bottom, 20)
