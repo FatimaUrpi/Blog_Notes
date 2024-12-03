@@ -2,7 +2,7 @@ import Foundation
 
 class UsuarioManager {
     static let shared = UsuarioManager()
-           
+        
        private let userDefaultsKey = "usuarios"
        
        // Registrar un usuario
