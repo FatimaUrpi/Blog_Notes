@@ -1,7 +1,9 @@
 import SwiftUI
+import FirebaseDatabase
 
 struct NoteListView: View {
     @State private var notes: [Note] = []
+    private var databaseRef = Database.database().reference().child("notes")
     
     // Define el diseño de la cuadrícula (dos columnas en este caso)
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
@@ -16,6 +18,7 @@ struct NoteListView: View {
                             NoteDetailView(existingNote: note) { updatedNote in
                                 if let index = notes.firstIndex(where: { $0.id == note.id }) {
                                     notes[index] = updatedNote
+                                    updateNoteInFirebase(updatedNote) // Actualiza la nota en Firebase
                                 }
                             }
                         }) {
@@ -38,7 +41,7 @@ struct NoteListView: View {
                         }
                     }
                     .onDelete { indexSet in
-                        notes.remove(atOffsets: indexSet)
+                        deleteNoteFromFirebase(at: indexSet) // Elimina la nota en Firebase
                     }
                 }
                 .padding(.horizontal)
@@ -48,6 +51,7 @@ struct NoteListView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(destination: {
                         NoteDetailView { newNote in
+                            saveNoteToFirebase(newNote) // Guarda la nueva nota en Firebase
                             notes.append(newNote)
                         }
                     }) {
@@ -56,6 +60,48 @@ struct NoteListView: View {
                 }
             }
         }
+        .onAppear {
+            fetchNotes() // Carga las notas al aparecer
+        }
+    }
+    
+    // MARK: - Firebase Integration Functions
+    
+    /// Carga las notas desde Firebase
+    private func fetchNotes() {
+        databaseRef.observe(.value) { snapshot in
+            var fetchedNotes: [Note] = []
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let value = childSnapshot.value as? [String: Any] {
+                   print("Fetched note data: \(value)")  // Esto te ayudará a ver qué datos estás obteniendo
+                   let note = Note(snapshot: value, id: childSnapshot.key)
+                   fetchedNotes.append(note)
+                }
+            }
+            self.notes = fetchedNotes
+        }
+    }
+
+    
+    /// Guarda una nueva nota en Firebase
+    private func saveNoteToFirebase(_ note: Note) {
+        let noteRef = databaseRef.childByAutoId()
+        noteRef.setValue(note.toDictionary())
+    }
+    
+    /// Actualiza una nota existente en Firebase
+    private func updateNoteInFirebase(_ note: Note) {
+        databaseRef.child(note.id).updateChildValues(note.toDictionary())
+    }
+    
+    /// Elimina una nota en Firebase
+    private func deleteNoteFromFirebase(at offsets: IndexSet) {
+        for index in offsets {
+            let note = notes[index]
+            databaseRef.child(note.id).removeValue()
+        }
+        notes.remove(atOffsets: offsets)
     }
 }
 
