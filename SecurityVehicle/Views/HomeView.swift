@@ -1,10 +1,9 @@
 import SwiftUI
-
-import SwiftUI
+import FirebaseAuth
 
 struct HomeView: View {
     @State private var showLoginView = false
-    
+
     var body: some View {
         ZStack {
             // Fondo colorido
@@ -12,7 +11,7 @@ struct HomeView: View {
 
             // Contenedor principal
             VStack {
-                Image("notasPrincipal") // Asegúrate de tener una imagen llamada "notebook" en tus assets
+                Image("notasPrincipal") // Asegúrate de tener una imagen llamada "notasPrincipal" en tus assets
                     .resizable()
                     .scaledToFit()
                     .frame(width: 300, height: 300)
@@ -34,10 +33,7 @@ struct HomeView: View {
                     .padding(.top, 10)
 
                 Spacer()
-                
-                /*NavigationLink(destination: LoginView()) {
-                 LoginView()
-             }*/
+
                 // Botón de inicio
                 Button(action: {
                     showLoginView = true
@@ -51,6 +47,14 @@ struct HomeView: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                 }
+                .padding(.bottom, 20)
+
+                // Botón de cerrar sesión
+                Button("Cerrar Sesión") {
+                    logoutUser()
+                }
+                .buttonStyle(.borderedProminent)
+                .foregroundColor(.red)
                 .padding(.bottom, 40)
             }
             .padding()
@@ -58,7 +62,23 @@ struct HomeView: View {
             .shadow(radius: 10)
             .padding(.horizontal, 20)
         }
-        .fullScreenCover(isPresented: $showLoginView) {LoginView()}
+        .fullScreenCover(isPresented: $showLoginView) {
+            LoginView() // Asegúrate de que LoginView sea una vista válida
+        }
+    }
+
+    private func logoutUser() {
+        do {
+            try Auth.auth().signOut()
+            // Regresar a la vista de inicio de sesión
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                window.rootViewController = UIHostingController(rootView: LoginView())
+                window.makeKeyAndVisible()
+            }
+        } catch let error {
+            print("Error al cerrar sesión: \(error.localizedDescription)")
+        }
     }
 }
 
