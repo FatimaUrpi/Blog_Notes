@@ -54,8 +54,9 @@ struct LoginView: View {
                         .background(Color.white)
                         .cornerRadius(10)
                         .padding(.horizontal, 30)
+                        .autocapitalization(.none)
                     Text("Password:")
-                    
+                        
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Color.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -100,9 +101,9 @@ struct LoginView: View {
                         .padding(.bottom, -25)
                     
                     Button(action: {
-                        showLoginView = true
+                        loginUser()
                     }) {
-                        Text("Crea una nota")
+                        Text("Iniciar Sesión")
                             .fontWeight(.bold)
                             .foregroundColor(.white
     )
@@ -119,15 +120,21 @@ struct LoginView: View {
                         LoginView()
                     }
                     
-                    Button(action: {
-                        showRegisterView = true
-                    }) {
-                        Text("Already have an account?")
+                    HStack {
+                        Text("¿Todavía no tienes una cuenta?")
                             .font(.footnote)
-                            .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)
-    ) // Mismo color que el botón
-                            .padding(.bottom, 30)
+                            .foregroundColor(.black) // Color normal para el texto
+
+                        Button(action: {
+                            showRegisterView = true
+                        }) {
+                            Text("Regístrate")
+                                .font(.footnote)
+                                .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)) // Color que deseas para el enlace
+                                .underline() // Agregar subrayado para indicar que es un enlace
+                        }
                     }
+                    .padding(.bottom, 30)
                     .fullScreenCover(isPresented: $showRegisterView) {
                         RegisterView()
                     }

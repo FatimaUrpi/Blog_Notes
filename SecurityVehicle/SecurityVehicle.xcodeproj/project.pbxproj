@@ -26,7 +26,6 @@
 		B7130C562D10A107007BF8D6 /* Nunito-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7130C462D10A107007BF8D6 /* Nunito-BoldItalic.ttf */; };
 		B7130C5A2D10A545007BF8D6 /* Home1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7130C592D10A545007BF8D6 /* Home1View.swift */; };
 		B7318E122CFB58310065AC82 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7318E112CFB58310065AC82 /* LoginView.swift */; };
-		B7318E152CFB59530065AC82 /* Usuario.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7318E142CFB59530065AC82 /* Usuario.swift */; };
 		B7CC32682CFB6077003A0D31 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CC32672CFB6077003A0D31 /* RegisterView.swift */; };
 		B7CC326B2CFB6139003A0D31 /* UsuarioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CC326A2CFB6139003A0D31 /* UsuarioManager.swift */; };
 		B7CC326D2CFB64E2003A0D31 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CC326C2CFB64E2003A0D31 /* HomeView.swift */; };
@@ -76,7 +75,6 @@
 		B7130C462D10A107007BF8D6 /* Nunito-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-BoldItalic.ttf"; sourceTree = "<group>"; };
 		B7130C592D10A545007BF8D6 /* Home1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home1View.swift; sourceTree = "<group>"; };
 		B7318E112CFB58310065AC82 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		B7318E142CFB59530065AC82 /* Usuario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Usuario.swift; sourceTree = "<group>"; };
 		B7CC32672CFB6077003A0D31 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		B7CC326A2CFB6139003A0D31 /* UsuarioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsuarioManager.swift; sourceTree = "<group>"; };
 		B7CC326C2CFB64E2003A0D31 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -150,11 +148,8 @@
 				B7CC327A2CFB714F003A0D31 /* NoteDetailView.swift */,
 				B7CC327C2CFB7165003A0D31 /* NoteListView.swift */,
 				B7E629132CFB9EFF00886BE9 /* UpdatePassword.swift */,
-
 				B7F883372D109F5600386CFF /* InfoUseView.swift */,
-
 				B7130C592D10A545007BF8D6 /* Home1View.swift */,
-
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -162,7 +157,6 @@
 		B7318E132CFB59050065AC82 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B7318E142CFB59530065AC82 /* Usuario.swift */,
 				B7CC326E2CFB6CF7003A0D31 /* Note.swift */,
 			);
 			path = Model;
@@ -326,7 +320,6 @@
 			files = (
 				B7F883382D109F5600386CFF /* InfoUseView.swift in Sources */,
 				B7CC327B2CFB714F003A0D31 /* NoteDetailView.swift in Sources */,
-				B7318E152CFB59530065AC82 /* Usuario.swift in Sources */,
 				B7CC327D2CFB7165003A0D31 /* NoteListView.swift in Sources */,
 				B7CC326D2CFB64E2003A0D31 /* HomeView.swift in Sources */,
 				B7CC32682CFB6077003A0D31 /* RegisterView.swift in Sources */,

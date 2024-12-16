@@ -1,4 +1,6 @@
 import SwiftUI
+import FirebaseAuth
+import FirebaseDatabase
 
 struct RegisterView: View {
     @State private var fullName: String = ""
@@ -8,76 +10,66 @@ struct RegisterView: View {
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
 
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.presentationMode) var presentationMode // Para cerrar la vista
 
     var body: some View {
         ZStack {
-            Color(red: 215/255, green: 231/255, blue: 250/255) // Light blue background
+            Color(red: 215/255, green: 231/255, blue: 250/255)
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 20) {
-                // Título principal
                 Image("logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity, maxHeight: 20)
-                    .padding(.top, 20)
-                    .padding(.bottom, 10)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity, maxHeight: 20)
+                .padding(.top, 20)
+                .padding(.bottom, 10)
                 
                 // Subtítulo
-                Text("Regístrate en Notely, interactúa con sus funcionalidades y comienza una aventura llena de ideas e imaginación.")
-                    .font(.system(size: 16))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(Color.gray)
-                    .padding(.horizontal, 30)
+               Text("Regístrate en Notely, interactúa con sus funcionalidades y comienza una aventura llena de ideas e imaginación.")
+                   .font(.system(size: 16))
+                   .multilineTextAlignment(.center)
+                   .foregroundColor(Color.gray)
+                   .padding(.horizontal, 30)
                 
-                // Campos de texto
                 Group {
-                    Text("Full Name")
+                    Text("Nombre completo")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Color.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 30)
-                    
-                    TextField("Salman Khan", text: $fullName)
+                    TextField("Juan Mendoza", text: $fullName)
                         .padding()
                         .background(Color.white)
                         .cornerRadius(10)
                         .padding(.horizontal, 30)
                     
-                    Text("Email Address")
+                    Text("Correo electrónico")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Color.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 30)
-                    
-                    TextField("mesalmanwap@gmail.com", text: $email)
+                    TextField("ejemplo@gmail.com", text: $email)
+                        .autocapitalization(.none)
                         .padding()
                         .background(Color.white)
                         .cornerRadius(10)
-                        .padding(.horizontal, 30)
-                    
-                    Text("Password")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(Color.black)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 30)
                     
                     ZStack(alignment: .trailing) {
                         if showPassword {
-                            TextField("##########", text: $password)
+                            TextField("Contraseña", text: $password)
                                 .padding()
                                 .background(Color.white)
                                 .cornerRadius(10)
                                 .padding(.horizontal, 30)
                         } else {
-                            SecureField("##########", text: $password)
+                            SecureField("Contraseña", text: $password)
                                 .padding()
                                 .background(Color.white)
                                 .cornerRadius(10)
                                 .padding(.horizontal, 30)
                         }
-                        
                         Button(action: {
                             showPassword.toggle()
                         }) {
@@ -87,47 +79,77 @@ struct RegisterView: View {
                         }
                     }
                 }
-
-                // Botón de registro
-                Button(action: {
-                    if fullName.isEmpty || email.isEmpty || password.isEmpty {
-                        alertMessage = "Por favor, llena todos los campos."
-                        showAlert = true
-                    } else {
-                        alertMessage = "Registro exitoso. ¡Inicia sesión ahora!"
-                        showAlert = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
-                }) {
+                
+                Button(action: registerUser) {
                     Text("Crear cuenta")
                         .font(.system(size: 18, weight: .bold))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color(red: 113/255, green: 114/255, blue: 240/255)) // Purple color
+                        .background(Color(red: 113/255, green: 114/255, blue: 240/255))
                         .foregroundColor(.white)
                         .cornerRadius(12)
                         .padding(.horizontal, 30)
                 }
                 .padding(.top, 10)
                 
-                // Pregunta de navegación
-                Text("Already have an account?")
-                    .font(.system(size: 14))
-                    .foregroundColor(Color.blue)
-                    .padding(.top, 10)
-                
-                Spacer()
             }
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Registro"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        } 
+    }
+
+    /// Función para registrar un usuario
+    private func registerUser() {
+        guard !fullName.isEmpty else {
+            alertMessage = "El nombre completo es obligatorio."
+            showAlert = true
+            return
+        }
+        
+        guard !email.isEmpty else {
+            alertMessage = "El correo electrónico es obligatorio."
+            showAlert = true
+            return
+        }
+        
+        guard !password.isEmpty else {
+            alertMessage = "La contraseña es obligatoria."
+            showAlert = true
+            return
+        }
+        
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                self.alertMessage = "Error al registrar: \(error.localizedDescription)"
+                self.showAlert = true
+                return
+            }
+            
+            guard let userID = authResult?.user.uid else { return }
+            
+            // Guardar datos adicionales en Realtime Database
+            let ref = Database.database().reference()
+            let userObject = [
+                "fullName": self.fullName,
+                "email": self.email
+            ]
+            
+            ref.child("users").child(userID).setValue(userObject) { error, _ in
+                if let error = error {
+                    self.alertMessage = "Error al guardar datos: \(error.localizedDescription)"
+                    self.showAlert = true
+                    return
+                }
+                self.alertMessage = "Registro exitoso. ¡Inicia sesión ahora!"
+                self.showAlert = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
         }
     }
 }
-
 #Preview {
     RegisterView()
 }
-
