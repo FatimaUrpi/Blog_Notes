@@ -1,5 +1,6 @@
 import SwiftUI
 import FirebaseDatabase
+import FirebaseAuth
 
 struct NoteListView: View {
     @State private var notes: [Note] = []
@@ -71,40 +72,49 @@ struct NoteListView: View {
     
     /// Carga las notas desde Firebase
     private func fetchNotes() {
-        databaseRef.observe(.value) { snapshot in
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let userNotesRef = databaseRef.child(userId)
+        
+        userNotesRef.observe(.value) { snapshot in
             var fetchedNotes: [Note] = []
             for child in snapshot.children {
                 if let childSnapshot = child as? DataSnapshot,
                    let value = childSnapshot.value as? [String: Any] {
-                   print("Fetched note data: \(value)")  // Esto te ayudará a ver qué datos estás obteniendo
-                   let note = Note(snapshot: value, id: childSnapshot.key)
-                   fetchedNotes.append(note)
+                    let note = Note(snapshot: value, id: childSnapshot.key)
+                    fetchedNotes.append(note)
                 }
             }
             self.notes = fetchedNotes
         }
     }
 
+
     
     /// Guarda una nueva nota en Firebase
     private func saveNoteToFirebase(_ note: Note) {
-        let noteRef = databaseRef.childByAutoId()
-        noteRef.setValue(note.toDictionary())
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let userNotesRef = databaseRef.child(userId).childByAutoId()
+        userNotesRef.setValue(note.toDictionary())
     }
+
     
     /// Actualiza una nota existente en Firebase
     private func updateNoteInFirebase(_ note: Note) {
-        databaseRef.child(note.id).updateChildValues(note.toDictionary())
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        databaseRef.child(userId).child(note.id).updateChildValues(note.toDictionary())
     }
+
     
     /// Elimina una nota en Firebase
     private func deleteNoteFromFirebase(at offsets: IndexSet) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
         for index in offsets {
             let note = notes[index]
-            databaseRef.child(note.id).removeValue()
+            databaseRef.child(userId).child(note.id).removeValue()
         }
         notes.remove(atOffsets: offsets)
     }
+
 }
 
 #Preview {

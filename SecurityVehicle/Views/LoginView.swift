@@ -22,7 +22,7 @@ struct LoginView: View {
     
     var body: some View {
         if isAuthenticated {
-            HomeView() // Redirige a la pantalla principal al autenticar
+            Home1View() // Redirige a la pantalla principal al autenticar
         } else {
             ZStack {
                 // Fondo principal
