@@ -38,9 +38,16 @@ struct LoginView: View {
                         .padding(.top, 20)
                         .padding(.bottom, 100)
                     
+                    
                     Text("Iniciar Sesión")
                         .font(.title)
                         .bold()
+                    // Subtítulo
+                    Text("Crea una cuenta usando tu correo electrónico y contraseña")
+                        .font(.system(size: 16))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(Color.gray)
+                        .padding(.horizontal, 30)
                     
                     Text("Email:")
                         .font(.system(size: 14, weight: .semibold))
@@ -56,7 +63,7 @@ struct LoginView: View {
                         .padding(.horizontal, 30)
                         .autocapitalization(.none)
                     Text("Password:")
-                        
+                    
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Color.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -106,12 +113,12 @@ struct LoginView: View {
                         Text("Iniciar Sesión")
                             .fontWeight(.bold)
                             .foregroundColor(.white
-    )
+                            )
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)
                                         
-    ) // Botón morado suave
+                            ) // Botón morado suave
                             .cornerRadius(10)
                             .padding(.horizontal, 50)
                             .padding(.bottom, 30)
@@ -124,7 +131,7 @@ struct LoginView: View {
                         Text("¿Todavía no tienes una cuenta?")
                             .font(.footnote)
                             .foregroundColor(.black) // Color normal para el texto
-
+                        
                         Button(action: {
                             showRegisterView = true
                         }) {
@@ -142,49 +149,49 @@ struct LoginView: View {
                 .padding()
             }
         }}
-        
-        // Función para iniciar sesión
-        private func loginUser() {
-            Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-                if let error = error {
-                    self.errorMessage = handleAuthError(error)
-                    return
-                }
-                self.isAuthenticated = true
+    
+    // Función para iniciar sesión
+    private func loginUser() {
+        // Intentar iniciar sesión con Firebase
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                self.errorMessage = handleAuthError(error)
+                return
             }
-        }
-        
-        // Función para registrar un usuario
-        private func registerUser() {
-            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-                if let error = error {
-                    self.errorMessage = handleAuthError(error)
-                    return
-                }
-                self.errorMessage = "Usuario registrado con éxito. Por favor, inicia sesión."
-            }
-        }
-        
-        //Función auxiliar para errores
-        private func handleAuthError(_ error: Error) -> String {
-            let nsError = error as NSError
-            switch AuthErrorCode(rawValue: nsError.code) {
-            case .invalidEmail:
-                return "El correo electrónico no es válido."
-            case .emailAlreadyInUse:
-                return "El correo ya está en uso."
-            case .weakPassword:
-                return "La contraseña es demasiado débil."
-            case .wrongPassword:
-                return "Contraseña incorrecta."
-            case .userNotFound:
-                return "Usuario no encontrado."
-            default:
-                return error.localizedDescription
-            }
+            self.isAuthenticated = true
         }
     }
-
+    
+    // Función para registrar un usuario
+    private func registerUser() {
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                self.errorMessage = handleAuthError(error)
+                return
+            }
+            self.errorMessage = "Usuario registrado con éxito. Por favor, inicia sesión."
+        }
+    }
+    
+    //Función auxiliar para errores
+    private func handleAuthError(_ error: Error) -> String {
+        let nsError = error as NSError
+        switch AuthErrorCode(rawValue: nsError.code) {
+        case .invalidEmail:
+            return "El correo electrónico no es válido."
+        case .emailAlreadyInUse:
+            return "El correo ya está en uso."
+        case .weakPassword:
+            return "La contraseña es demasiado débil."
+        case .wrongPassword:
+            return "Contraseña incorrecta."
+        case .userNotFound:
+            return "Usuario no encontrado."
+        default:
+            return error.localizedDescription
+        }
+    }
+}
 
 #Preview {
     LoginView()

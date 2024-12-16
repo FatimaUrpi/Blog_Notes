@@ -9,20 +9,34 @@ struct RegisterView: View {
     @State private var showPassword: Bool = false
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
+    @State private var returnLoginView = false
 
-    @Environment(\.presentationMode) var presentationMode // Para cerrar la vista
-
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         ZStack {
             Color(red: 215/255, green: 231/255, blue: 250/255)
                 .ignoresSafeArea()
 
             VStack(spacing: 20) {
+                // Botón de retorno
+                HStack {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.title)
+                            .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255)) // Color del ícono
+                            .padding()
+                    }
+                    .padding(.leading, 20)
+                    
+                    Spacer()
+                }
                 Image("logo")
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity, maxHeight: 20)
-                .padding(.top, 20)
                 .padding(.bottom, 10)
                 
                 // Subtítulo
@@ -56,7 +70,13 @@ struct RegisterView: View {
                         .cornerRadius(10)
                         .padding(.horizontal, 30)
                     
+                    Text("Contraseña")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(Color.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 30)
                     ZStack(alignment: .trailing) {
+                        
                         if showPassword {
                             TextField("Contraseña", text: $password)
                                 .padding()
@@ -79,24 +99,37 @@ struct RegisterView: View {
                         }
                     }
                 }
-                
                 Button(action: registerUser) {
                     Text("Crear cuenta")
                         .font(.system(size: 18, weight: .bold))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color(red: 113/255, green: 114/255, blue: 240/255))
+                        .background(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1))
                         .foregroundColor(.white)
                         .cornerRadius(12)
                         .padding(.horizontal, 30)
                 }
                 .padding(.top, 10)
-                
+                Button(action: {
+                    returnLoginView = true
+                }) {
+                    Text("Regresar al Inicio de Sesión")
+                        .font(.footnote)
+                        .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255))
+                        .underline()
+                }
+                .padding(.bottom, 30)
+                .fullScreenCover(isPresented: $returnLoginView) {
+                    LoginView()
+                }
             }
+            
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Registro"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         } 
+        
+        
     }
 
     /// Función para registrar un usuario
