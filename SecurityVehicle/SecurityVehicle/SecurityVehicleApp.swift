@@ -1,23 +1,7 @@
-//
-//  SecurityVehicleApp.swift
-//  SecurityVehicle
-//
-//  Created by DAMII on 30/11/24.
-//
-
-/*import SwiftUI
-
-@main
-struct SecurityVehicleApp: App {
-    var body: some Scene {
-        WindowGroup {
-            LoginView()
-        }
-    }
-}*/
-
 import SwiftUI
 import FirebaseCore
+import FirebaseAuth
+
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -38,10 +22,12 @@ struct YourApp: App {
   var body: some Scene {
     WindowGroup {
       NavigationView {
-        LoginView()
+          if Auth.auth().currentUser != nil {
+              HomeView() // Usuario autenticado
+          } else {
+              LoginView() // No autenticado
+        }
       }
     }
   }
 }
-
-

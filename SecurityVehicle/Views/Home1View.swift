@@ -1,8 +1,15 @@
+//
+//  Home1View.swift
+//  SecurityVehicle
+//
+//  Created by DAMII on 16/12/24.
+//
+
 import SwiftUI
 
-struct HomeView: View {
-    @State private var showLoginView = false
-    @State private var showRegisterView = false
+struct Home1View: View {
+    @State private var showNoteView = false
+
     
     var body: some View {
         ZStack {
@@ -20,7 +27,7 @@ struct HomeView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 100)
                 // Imagen superior
-                Image("home")
+                Image("home1")
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity, maxHeight: 400) // Máximo ancho y altura limitada
@@ -28,7 +35,7 @@ struct HomeView: View {
 
                 
                 // Título principal
-                Text("Tus ideas, más seguras que nunca")
+                Text("Crea tu primera nota")
                     .font(.title2)
                 
                     .fontWeight(.bold)
@@ -38,7 +45,7 @@ struct HomeView: View {
                     .padding(.horizontal, 20)
                 
                 // Descripción
-                Text("Con Notely, tu creatividad está protegida. Almacena, organiza y comparte tus pensamientos con total tranquilidad.")
+                Text("Crea una nota sobre lo que quieras (tus pensamientos, alguna historia o ensayo) y compartela con el mundo.")
                     .font(.body)
                     .foregroundColor(Color(red: 89 / 255, green: 85 / 255, blue: 80 / 255, opacity: 1)
 )
@@ -49,43 +56,31 @@ struct HomeView: View {
                 
                 // Botón de explorar - Redirige al RegisterView
                 Button(action: {
-                    showRegisterView = true
+                    showNoteView = true
                 }) {
-                    Text("EXPLORA TUS IDEAS")
+                    Text("Crea una nota")
                         .fontWeight(.bold)
-                        .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)
+                        .foregroundColor(.white
 )
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(.white
+                        .background(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)
                                     
 ) // Botón morado suave
                         .cornerRadius(10)
                         .padding(.horizontal, 50)
-                }
-                .fullScreenCover(isPresented: $showRegisterView) {
-                    RegisterView()
-                }
-                
-                // Texto inferior - Redirige al LoginView
-                Button(action: {
-                    showLoginView = true
-                }) {
-                    Text("Already have an account?")
-                        .font(.footnote)
-                        .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)
-) // Mismo color que el botón
                         .padding(.bottom, 30)
                 }
-                .fullScreenCover(isPresented: $showLoginView) {
-                    LoginView()
+                .fullScreenCover(isPresented: $showNoteView) {
+                    NoteListView()
                 }
+                
+            
             }
         }
     }
 }
 
-
 #Preview {
-    HomeView()
+    Home1View()
 }

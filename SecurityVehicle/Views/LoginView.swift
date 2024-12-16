@@ -1,104 +1,96 @@
+//
+//  LoginView.swift
+//  SecurityVehicle
+//
+//  Created by DAMII on 16/12/24.
+//
+
 import SwiftUI
+import FirebaseAuth
 
 struct LoginView: View {
-    @State private var username: String = ""
+    @State private var email: String = ""
     @State private var password: String = ""
-    @State private var isSecure: Bool = true
-    @State private var showAlert: Bool = false
-    @State private var alertMessage: String = ""
-    @State private var isLoggedIn: Bool = false
+    @State private var errorMessage: String?
+    @State private var isAuthenticated = false
 
     var body: some View {
-        NavigationView {
-            VStack {
-                Image(systemName: "note.text") // Icono de notas
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .foregroundColor(.blue)
-                    .padding(.bottom, 40)
-                
-                Text("Bienvenido")
+        if isAuthenticated {
+            HomeView() // Redirige a la pantalla principal al autenticar
+        } else {
+            VStack(spacing: 20) {
+                Text("Iniciar Sesión")
                     .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.primary)
-                    .padding(.bottom, 20)
+                    .bold()
 
-                TextField("Username", text: $username)
-                    .textInputAutocapitalization(.never)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.gray.opacity(0.5)))
-                    .padding(.bottom, 20)
+                TextField("Correo Electrónico", text: $email)
+                    .autocapitalization(.none)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
 
-                HStack {
-                    if isSecure {
-                        SecureField("Contraseña", text: $password)
-                            .textInputAutocapitalization(.never)
-                    } else {
-                        TextField("Contraseña", text: $password)
-                            .textInputAutocapitalization(.never)
-                    }
-                    Button(action: {
-                        isSecure.toggle()
-                    }) {
-                        Image(systemName: isSecure ? "eye.slash" : "eye")
-                            .foregroundColor(.blue)
-                    }
-                }
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.gray.opacity(0.5)))
+                SecureField("Contraseña", text: $password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
 
-                NavigationLink(destination: NoteListView(), isActive: $isLoggedIn) {
-                    EmptyView()
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .font(.caption)
                 }
 
-                Button(action: {
-                    if username.isEmpty || password.isEmpty {
-                        alertMessage = "Por favor, ingresa tus credenciales."
-                        showAlert = true
-                    } else if UsuarioManager.shared.validarUsuario(username: username, password: password) {
-                        alertMessage = "Inicio de sesión exitoso."
-                        showAlert = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            isLoggedIn = true
-                        }
-                    } else {
-                        alertMessage = "Credenciales incorrectas. Intenta nuevamente."
-                        showAlert = true
-                    }
-                }) {
-                    Text("Iniciar sesión")
-                    
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                Button("Iniciar Sesión") {
+                    loginUser()
                 }
-                .padding(.top, 20)
-                .alert(isPresented: $showAlert) {
-                    Alert(title: Text("Mensaje"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-                }
+                .buttonStyle(.borderedProminent)
 
-                Spacer()
-
-                HStack {
-                    Text("¿No tienes una cuenta?")
-                    NavigationLink(destination: RegisterView()) {
-                        Text("Regístrate")
-                            .foregroundColor(.blue)
-                            .fontWeight(.bold)
-                    }
+                Button("Registrarse") {
+                    registerUser()
                 }
-                .padding(.top, 20)
+                .buttonStyle(.bordered)
             }
             .padding()
-            .background(Color(.systemGray6).edgesIgnoringSafeArea(.all))
+        }
+    }
+
+    // Función para iniciar sesión
+    private func loginUser() {
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                self.errorMessage = handleAuthError(error)
+                return
+            }
+            self.isAuthenticated = true
+        }
+    }
+
+    // Función para registrar un usuario
+    private func registerUser() {
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                self.errorMessage = handleAuthError(error)
+                return
+            }
+            self.errorMessage = "Usuario registrado con éxito. Por favor, inicia sesión."
+        }
+    }
+    
+    //Función auxiliar para errores
+    private func handleAuthError(_ error: Error) -> String {
+        let nsError = error as NSError
+        switch AuthErrorCode(rawValue: nsError.code) {
+        case .invalidEmail:
+            return "El correo electrónico no es válido."
+        case .emailAlreadyInUse:
+            return "El correo ya está en uso."
+        case .weakPassword:
+            return "La contraseña es demasiado débil."
+        case .wrongPassword:
+            return "Contraseña incorrecta."
+        case .userNotFound:
+            return "Usuario no encontrado."
+        default:
+            return error.localizedDescription
         }
     }
 }
-
 
 
 #Preview {
