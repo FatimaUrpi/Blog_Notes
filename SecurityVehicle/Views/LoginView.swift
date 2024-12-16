@@ -1,16 +1,10 @@
-//
-//  LoginView.swift
-//  SecurityVehicle
-//
-//  Created by DAMII on 16/12/24.
-//
-
 import SwiftUI
 import FirebaseAuth
 
 struct LoginView: View {
     @State private var showLoginView = false
     @State private var showRegisterView = false
+    @State private var showUpdatePasswordView = false // Añadir esta variable
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var showPassword: Bool = false
@@ -27,7 +21,6 @@ struct LoginView: View {
             ZStack {
                 // Fondo principal
                 Color(red: 211 / 255, green: 230 / 255, blue: 249 / 255, opacity: 1)
-                // Color celeste claro
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack(spacing: 20) {
@@ -36,14 +29,14 @@ struct LoginView: View {
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 20)
                         .padding(.top, 20)
-                        .padding(.bottom, 100)
+               
                     
                     Text("Iniciar Sesión")
                         .font(.title)
                         .bold()
                     
                     Text("Email:")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(Color.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 30)
@@ -54,13 +47,25 @@ struct LoginView: View {
                         .background(Color.white)
                         .cornerRadius(10)
                         .padding(.horizontal, 30)
-                    Text("Password:")
-                    
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(Color.black)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 30)
-                    
+                        .autocapitalization(.none)
+                    HStack {
+                        Text("Password:")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(Color.black)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 29)
+                        
+                        Spacer() // Esto empuja el segundo texto hacia la derecha
+                        
+                        Text("Olvidaste tu contraseña?")
+                            .font(.footnote)
+                            .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1))
+                            .underline()
+                            .padding(.trailing, 26)
+                            .onTapGesture {
+                                showUpdatePasswordView = true // Mostrar UpdatePasswordView
+                            }
+                    }
                     ZStack(alignment: .trailing) {
                         if showPassword {
                             TextField("##########", text: $password)
@@ -99,85 +104,89 @@ struct LoginView: View {
                         .padding(.top, 5)
                         .padding(.bottom, -25)
                     
+                    
                     Button(action: {
-                        showLoginView = true
+                        loginUser()
                     }) {
-                        Text("Crea una nota")
+                        Text("Iniciar Sesión")
                             .fontWeight(.bold)
-                            .foregroundColor(.white
-    )
+                            .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)
-                                        
-    ) // Botón morado suave
+                            .background(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)) // Botón morado suave
                             .cornerRadius(10)
+                            .padding(.horizontal, 50)
+                            .padding(.top, 5)
+                        
+                    }
+                    
+                    
+                    
+                    Button(action: {
+                        showRegisterView = true // Cambiar a showRegisterView
+                    }) {
+                        Text("Registrate")
+                            .fontWeight(.bold)
+                            .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)) // Color del texto
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.clear) // Fondo transparente
+                            .cornerRadius(10)
+                            .overlay( // Borde de 1px
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1), lineWidth: 1)
+                            )
                             .padding(.horizontal, 50)
                             .padding(.bottom, 30)
                     }
-                    .fullScreenCover(isPresented: $showLoginView) {
-                        LoginView()
-                    }
                     
-                    Button(action: {
-                        showRegisterView = true
-                    }) {
-                        Text("Already have an account?")
-                            .font(.footnote)
-                            .foregroundColor(Color(red: 125 / 255, green: 142 / 255, blue: 215 / 255, opacity: 1)
-    ) // Mismo color que el botón
-                            .padding(.bottom, 30)
-                    }
-                    .fullScreenCover(isPresented: $showRegisterView) {
-                        RegisterView()
-                    }
+                    
+                    
                 }
+                .padding(.bottom, 30)
                 .padding()
-            }
-        }}
-        
-        // Función para iniciar sesión
-        private func loginUser() {
-            Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-                if let error = error {
-                    self.errorMessage = handleAuthError(error)
-                    return
+                // Navegación a las vistas de "UpdatePassword" y "RegisterView"
+                .fullScreenCover(isPresented: $showRegisterView) {
+                    RegisterView() // Mostrar RegisterView
                 }
-                self.isAuthenticated = true
-            }
-        }
-        
-        // Función para registrar un usuario
-        private func registerUser() {
-            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-                if let error = error {
-                    self.errorMessage = handleAuthError(error)
-                    return
+                .fullScreenCover(isPresented: $showUpdatePasswordView) {
+                    UpdatePassword() // Mostrar UpdatePasswordView
                 }
-                self.errorMessage = "Usuario registrado con éxito. Por favor, inicia sesión."
-            }
-        }
-        
-        //Función auxiliar para errores
-        private func handleAuthError(_ error: Error) -> String {
-            let nsError = error as NSError
-            switch AuthErrorCode(rawValue: nsError.code) {
-            case .invalidEmail:
-                return "El correo electrónico no es válido."
-            case .emailAlreadyInUse:
-                return "El correo ya está en uso."
-            case .weakPassword:
-                return "La contraseña es demasiado débil."
-            case .wrongPassword:
-                return "Contraseña incorrecta."
-            case .userNotFound:
-                return "Usuario no encontrado."
-            default:
-                return error.localizedDescription
             }
         }
     }
-
+    
+    
+    // Función para iniciar sesión
+    private func loginUser() {
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                self.errorMessage = handleAuthError(error)
+                return
+            }
+            self.isAuthenticated = true
+        }
+    }
+    
+    // Función auxiliar para errores
+    private func handleAuthError(_ error: Error) -> String {
+        let nsError = error as NSError
+        switch AuthErrorCode(rawValue: nsError.code) {
+        case .invalidEmail:
+            return "El correo electrónico no es válido."
+        case .emailAlreadyInUse:
+            return "El correo ya está en uso."
+        case .weakPassword:
+            return "La contraseña es demasiado débil."
+        case .wrongPassword:
+            return "Contraseña incorrecta."
+        case .userNotFound:
+            return "Usuario no encontrado."
+        default:
+            return error.localizedDescription
+        }
+    }
+}
 
 #Preview {
     LoginView()
