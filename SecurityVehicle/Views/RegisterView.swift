@@ -17,10 +17,12 @@ struct RegisterView: View {
             
             VStack(spacing: 20) {
                 // Título principal
-                Text("NOTELY")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(Color.black)
-                    .padding(.top, 30)
+                Image("logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: 20)
+                    .padding(.top, 20)
+                    .padding(.bottom, 10)
                 
                 // Subtítulo
                 Text("Regístrate en Notely, interactúa con sus funcionalidades y comienza una aventura llena de ideas e imaginación.")

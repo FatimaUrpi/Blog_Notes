@@ -9,7 +9,9 @@ struct NoteListView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
+        
         NavigationStack {
+            
             // Usamos LazyVGrid en lugar de List
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 10) {  // Ajusta el valor de 'spacing' para reducir el espacio entre los bloques

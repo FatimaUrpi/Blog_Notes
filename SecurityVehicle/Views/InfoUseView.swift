@@ -5,9 +5,12 @@ struct InfoUseView: View {
         VStack(spacing: 20) {
             // Encabezado
             VStack(spacing: 8) {
-                Text("NOTELY")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(Color.black)
+                Image("logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: 20)
+                    .padding(.top, 30)
+                    .padding(.bottom, 20)
                 
                 // Imagen del usuario
                 Image("Profile") // Reemplaza con tu asset de imagen
