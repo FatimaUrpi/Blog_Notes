@@ -4,6 +4,12 @@ import FirebaseAuth
 
 struct NoteListView: View {
     @State private var notes: [Note] = []
+    @Environment(\.presentationMode) var presentationMode
+    
+    @State private var selectedNote: Note? = nil
+    @State private var isEditing: Bool = false
+
+    
     private var databaseRef = Database.database().reference().child("notes")
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
@@ -29,7 +35,7 @@ struct NoteListView: View {
                                 
                                 // Botón para editar la nota
                                 Button(action: {
-                                    editNote(note)
+                                    openNoteDetail(for: note)
                                 }) {
                                     Image(systemName: "pencil.circle")
                                         .font(.title3)
@@ -49,7 +55,7 @@ struct NoteListView: View {
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.1)))
                         .onTapGesture {
-                            editNote(note) // Editar al tocar la nota
+                            openNoteDetail(for: note)
                         }
                     }
                 }
@@ -68,11 +74,33 @@ struct NoteListView: View {
                     }
                 }
             }
+            NavigationLink(
+                destination: NoteDetailView(
+                    existingNote: selectedNote,
+                    onSave: { updatedNote in
+                        if let index = notes.firstIndex(where: { $0.id == updatedNote.id }) {
+                            notes[index] = updatedNote
+                            updateNoteInFirebase(updatedNote)
+                        }
+                        isEditing = false
+                    }
+                ),
+                isActive: $isEditing
+            ) {
+                EmptyView()
+            }
         }
         .onAppear {
             fetchNotes()
         }
     }
+    
+    // MARK: - Helper Functions
+    private func openNoteDetail(for note: Note) {
+        selectedNote = note
+        isEditing = true
+    }
+
 
     // MARK: - Funciones de Firebase
     

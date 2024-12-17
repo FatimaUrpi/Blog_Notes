@@ -5,9 +5,11 @@ struct NoteDetailView: View {
     @State var content: String = ""
     @State var category: String = "General" // Valor predeterminado
     @Environment(\.dismiss) var dismiss
-    let onSave: (Note) -> Void
     var existingNote: Note?
+    let onSave: (Note) -> Void
+    
 
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -21,8 +23,8 @@ struct NoteDetailView: View {
                 
                 Picker("Categoría", selection: $category) {
                     Text("General").tag("General")
-                    Text("Holi").tag("Holi")
-                    Text("Trabajo").tag("Trabajo")
+                    Text("Entretenimiento").tag("Entretenimiento")
+                    Text("Escuela").tag("Escuela")
                     Text("Personal").tag("Personal")
                 }
                 .pickerStyle(SegmentedPickerStyle())
@@ -46,11 +48,16 @@ struct NoteDetailView: View {
                         }
                         onSave(note)
                         dismiss()
-
                     }
                     .disabled(title.isEmpty || content.isEmpty)
-                }
+                    
+                } 
+                
+            }
+            Button("Cancelar") {
+                dismiss()
             }
         }
+        
     }
 }
